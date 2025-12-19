@@ -18,14 +18,15 @@ async function generateCaption() {
     contents: `
     Generate a short Mobile Legends hero output in this structure:
 
-  "This is {Mobile Legends hero name}
+  "**Who is {Mobile Legends hero name} ?**
   {Short description of that hero}"
 
   Requirements:
   - Random Mobile Legends hero name
-  - Description must be 1–2 sentences only
+  - Description must be 1–5 sentences only
   - Description must be motivational/inspirational
   - Use emojis
+  - Add hashtag that connects in mobile legends
     `,
   });
 //   console.log(response.text);
