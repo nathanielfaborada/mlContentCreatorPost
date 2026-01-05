@@ -122,7 +122,10 @@ return imageUrl;
 // https://graph.facebook.com/v24.0/page_id/photos
 
 async function postToFacebookImage(imageUrl) {
-  if (!imageUrl) return;
+  if (!imageUrl) {
+    console.error("No image URL received");
+    return;
+  }
 
   const url = `https://graph.facebook.com/v24.0/${FB_PAGE_ID}/photos`;
 
@@ -130,21 +133,21 @@ async function postToFacebookImage(imageUrl) {
     const res = await axios.post(
       url,
       {
-        message: imageUrl,
+        url: imageUrl, // ✅ REQUIRED
+        caption: "🌄 AI Generated Image", // optional
         access_token: FB_PAGE_ACCESS_TOKEN,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
       }
     );
 
     console.log("Posted successfully! Post ID:", res.data.id);
   } catch (err) {
-    console.error("Error posting to Facebook:", err.response?.data || err.message);
+    console.error(
+      "Error posting to Facebook:",
+      err.response?.data || err.message
+    );
   }
 }
+
 
 
 async function run() {
@@ -154,7 +157,8 @@ async function run() {
   const generateimage = await generateImage();
 
   // console.log("Caption:\n", caption);
-  console.log("Image URL:\n", generateImage);
+  console.log("Image URL:\n", generateimage);
+
   console.log("Posting to Facebook...");
 
   await postToFacebookImage(generateimage);
