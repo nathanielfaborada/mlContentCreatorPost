@@ -27,36 +27,40 @@ async function generateImage() {
     });
 
     // Create event source for streaming updates
-const reader = response.body
-  .pipeThrough(new TextDecoderStream())
-  .pipeThrough(new TransformStream({
-    transform(chunk, controller) {
-      // Parse SSE data
-      const lines = chunk.split('\n');
-      const messages = lines
-        .filter(line => line.startsWith('data: '))
-        .map(line => JSON.parse(line.slice(6)));
-      
-      messages.forEach(data => {
-        switch (data.status) {
-          case 'processing':
-            console.log('Progress:', data.message);
-            break;
-          case 'complete':
-            console.log('Image URL:', data.imageUrl);
-            break;
-          case 'error':
-            console.error('Error:', data.message);
-            break;
-        }
-      });
+const stream = response.body
+  .pipeThrough(new TextDecoderStream());
+
+const reader = stream.getReader();
+
+let imageUrl = null;
+
+while (true) {
+  const { value, done } = await reader.read();
+  if (done) break;
+
+  const lines = value.split('\n');
+
+  for (const line of lines) {
+    if (!line.startsWith('data: ')) continue;
+
+    const data = JSON.parse(line.slice(6));
+
+    if (data.status === "processing") {
+      console.log("Progress:", data.message);
     }
-  }));
 
-// Start reading the stream
-reader.read();
+    if (data.status === "complete") {
+      console.log("Image URL:", data.imageUrl);
+      imageUrl = data.imageUrl;
+    }
 
-return response.data.imageUrl;
+    if (data.status === "error") {
+      throw new Error(data.message);
+    }
+  }
+}
+
+return imageUrl;
 
 
     
