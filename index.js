@@ -13,94 +13,94 @@ const FB_PAGE_ID = process.env.FB_PAGE_ID;
 const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 
 // For mobile legends 
-// async function generateCaption() {
+async function generateCaption() {
 
-//     const response = await ai.models.generateContent({
-//     model: "gemini-2.5-flash",
-//     contents: `
-//     Generate a short Mobile Legends hero output in this structure:
+    const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: `
+    Generate a short Mobile Legends hero output in this structure:
 
-//   "**Who is {Mobile Legends hero name} ?**
-//   {Short description of that hero}"
+  "**Who is {Mobile Legends hero name} ?**
+  {Short description of that hero}"
 
-//   Requirements:
-//   - Random Mobile Legends hero name
-//   - Description must be 1–5 sentences only
-//   - Description must be motivational/inspirational
-//   - Use emojis
-//   - Add hashtag that connects in mobile legends
-//     `,
-//   });
-// //   console.log(response.text);
-//   return response.text;
-// }
+  Requirements:
+  - Random Mobile Legends hero name
+  - Description must be 1–5 sentences only
+  - Description must be motivational/inspirational
+  - Use emojis
+  - Add hashtag that connects in mobile legends
+    `,
+  });
+//   console.log(response.text);
+  return response.text;
+}
 
-// async function postToFacebook(caption) {
-//   if (!caption) return;
+async function postToFacebook(caption) {
+  if (!caption) return;
 
-//   const url = `https://graph.facebook.com/v24.0/${FB_PAGE_ID}/feed`;
+  const url = `https://graph.facebook.com/v24.0/${FB_PAGE_ID}/feed`;
 
-//   try {
-//     const res = await axios.post(
-//       url,
-//       {
-//         message: caption,
-//         access_token: FB_PAGE_ACCESS_TOKEN,
-//       },
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
+  try {
+    const res = await axios.post(
+      url,
+      {
+        message: caption,
+        access_token: FB_PAGE_ACCESS_TOKEN,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-//     console.log("Posted successfully! Post ID:", res.data.id);
-//   } catch (err) {
-//     console.error("Error posting to Facebook:", err.response?.data || err.message);
-//   }
-// }
+    console.log("Posted successfully! Post ID:", res.data.id);
+  } catch (err) {
+    console.error("Error posting to Facebook:", err.response?.data || err.message);
+  }
+}
 
 // Nano Banana
 
-async function createImage() {
+// async function createImage() {
 
-  const response = await ai.models.generateContent({
-  model: "gemini-2.5-flash-image",
-  contents: "Create a picture of a futuristic banana with neon lights in a cyberpunk city.",
-});
+//   const response = await ai.models.generateContent({
+//   model: "gemini-2.5-flash-image",
+//   contents: "Create a picture of a futuristic banana with neon lights in a cyberpunk city.",
+// });
 
-for (const part of response.candidates[0].content.parts) {
-  if (part.inlineData) {
-    const buffer = Buffer.from(part.inlineData.data, "base64");
-    fs.writeFileSync("banana.png", buffer);
-  }
-}
+// for (const part of response.candidates[0].content.parts) {
+//   if (part.inlineData) {
+//     const buffer = Buffer.from(part.inlineData.data, "base64");
+//     fs.writeFileSync("banana.png", buffer);
+//   }
+// }
 
-return response;
-}
+// return response;
+// }
 
-async function postImageToFacebook(imagePath) {
-  if (!imagePath) return;
+// async function postImageToFacebook(imagePath) {
+//   if (!imagePath) return;
 
-  const url = `https://graph.facebook.com/v24.0/${FB_PAGE_ID}/photos`;
+//   const url = `https://graph.facebook.com/v24.0/${FB_PAGE_ID}/photos`;
 
-  const form = new FormData();
-  form.append("source", fs.createReadStream(imagePath)); // ACTUAL IMAGE
-  form.append("message", "🚀 Futuristic banana in a cyberpunk city 🍌✨");
-  form.append("access_token", FB_PAGE_ACCESS_TOKEN);
+//   const form = new FormData();
+//   form.append("source", fs.createReadStream(imagePath)); // ACTUAL IMAGE
+//   form.append("message", "🚀 Futuristic banana in a cyberpunk city 🍌✨");
+//   form.append("access_token", FB_PAGE_ACCESS_TOKEN);
 
-  try {
-    const res = await axios.post(url, form, {
-      headers: {
-        ...form.getHeaders(), // VERY IMPORTANT
-      },
-    });
+//   try {
+//     const res = await axios.post(url, form, {
+//       headers: {
+//         ...form.getHeaders(), // VERY IMPORTANT
+//       },
+//     });
 
-    console.log("✅ Posted successfully! Post ID:", res.data.id);
-  } catch (err) {
-    console.error("❌ Error posting to Facebook:", err.response?.data || err.message);
-  }
-}
+//     console.log("✅ Posted successfully! Post ID:", res.data.id);
+//   } catch (err) {
+//     console.error("❌ Error posting to Facebook:", err.response?.data || err.message);
+//   }
+// }
   
 
 
@@ -108,14 +108,12 @@ async function postImageToFacebook(imagePath) {
 
 async function run() {
   
-  // const caption = await generateCaption();
-  await createImage();
+  const caption = await generateCaption();
 
-  await postImageToFacebook("banana.png");
 
   console.log("Caption:\n", caption);
   console.log("Posting to Facebook...");
-  // await postToFacebook(caption);
+  await postToFacebook(caption);
 }
 
 run();
