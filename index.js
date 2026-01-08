@@ -60,50 +60,6 @@ async function postToFacebook(caption) {
   }
 }
 
-// Nano Banana
-
-// async function createImage() {
-
-//   const response = await ai.models.generateContent({
-//   model: "gemini-2.5-flash-image",
-//   contents: "Create a picture of a futuristic banana with neon lights in a cyberpunk city.",
-// });
-
-// for (const part of response.candidates[0].content.parts) {
-//   if (part.inlineData) {
-//     const buffer = Buffer.from(part.inlineData.data, "base64");
-//     fs.writeFileSync("banana.png", buffer);
-//   }
-// }
-
-// return response;
-// }
-
-// async function postImageToFacebook(imagePath) {
-//   if (!imagePath) return;
-
-//   const url = `https://graph.facebook.com/v24.0/${FB_PAGE_ID}/photos`;
-
-//   const form = new FormData();
-//   form.append("source", fs.createReadStream(imagePath)); // ACTUAL IMAGE
-//   form.append("message", "🚀 Futuristic banana in a cyberpunk city 🍌✨");
-//   form.append("access_token", FB_PAGE_ACCESS_TOKEN);
-
-//   try {
-//     const res = await axios.post(url, form, {
-//       headers: {
-//         ...form.getHeaders(), // VERY IMPORTANT
-//       },
-//     });
-
-//     console.log("✅ Posted successfully! Post ID:", res.data.id);
-//   } catch (err) {
-//     console.error("❌ Error posting to Facebook:", err.response?.data || err.message);
-//   }
-// }
-  
-
-
 
 
 async function run() {
